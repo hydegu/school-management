@@ -11,6 +11,13 @@ spring:
       schema-locations: classpath:db/database.sql
       data-locations: classpath:db/database_init_data.sqldata.sql
 
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      password: 123456 #redis密码
+      database: 0
+
 # MyBatis Plus配置
 mybatis-plus:
   # mapper.xml文件位置
@@ -35,3 +42,9 @@ mybatis-plus:
       logic-delete-value: 1
       # 逻辑未删除值
       logic-not-delete-value: 0
+
+com:
+  jwt:
+    user-secret-key: +kJ8A7Cw9b9hhPNULgUTYsXWLJI0TIsuLtGX99A+I3M=
+    user-ttl: 7200000  # 2小时
+    user-token-name: authentication
