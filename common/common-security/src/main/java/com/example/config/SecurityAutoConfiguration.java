@@ -8,7 +8,7 @@ import org.springframework.context.annotation.ComponentScan;
 @ComponentScan(basePackages = {
 
         "com.example.config",   // 扫描 config 包：JwtSecurityConfig, JwtAuthenticationFilter, JwtAuthenticationEntryPoint
-
+        "com.example.filter",
         "com.example.handler"   // 扫描 handler 包：JwtAccessDeniedHandler
 
 })
