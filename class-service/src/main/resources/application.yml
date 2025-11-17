@@ -1,0 +1,28 @@
+spring:
+  application:
+    name: class-service
+  config:
+    import:
+      - nacos:class-service.yaml?refresh=true
+      - nacos:school-common.yaml?refresh=true
+  cloud:
+    nacos:
+      serverAddr: 127.0.0.1:8848
+      discovery:
+        enabled: true
+    sentinel:
+      transport:
+        port: 8721
+        dashboard: localhost:8858
+      eager: true
+    openfeign:
+      sentinel:
+        enabled: true
+
+# Feign
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: 3000
+        readTimeout: 5000

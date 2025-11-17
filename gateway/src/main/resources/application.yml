@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: gateway-service
+  config:
+    import:
+      - nacos:gateway-service.yaml?refresh=true
+  cloud:
+    nacos:
+      serverAddr: 127.0.0.1:8848
+      discovery:
+        enabled: true
+    sentinel:
+      transport:
+        port: 8720
+        dashboard: localhost:8858
+      eager: true

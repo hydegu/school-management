@@ -1,0 +1,29 @@
+spring:
+  application:
+    name: business-service
+  config:
+    import:
+      - nacos:business-service.yaml?refresh=true
+      - nacos:school-common.yaml?refresh=true
+  cloud:
+    nacos:
+      serverAddr: 127.0.0.1:8848
+      discovery:
+        # ????? Nacos
+        enabled: true
+    sentinel:
+      transport:
+        port: 8719           # ???? 8720?? post ????
+        dashboard: localhost:8858
+      eager: true
+    openfeign:
+      sentinel:
+        enabled: true  # ?? Feign ? Sentinel ??
+
+# Feign ????
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: 3000    # ???? 3?
+        readTimeout: 5000       # ???? 5?

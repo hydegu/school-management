@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: student-service
+  config:
+    import:
+      - nacos:student-service.yaml?refresh=true
+      - nacos:school-common.yaml?refresh=true
+  cloud:
+    nacos:
+      serverAddr: 127.0.0.1:8848
+      discovery:
+        enabled: true
+    sentinel:
+      transport:
+        port: 8723
+        dashboard: localhost:8858
+      eager: true
