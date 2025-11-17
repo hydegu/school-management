@@ -1,4 +1,4 @@
-package com.example.config;
+package com.example.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
