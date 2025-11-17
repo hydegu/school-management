@@ -22,9 +22,7 @@ import java.io.IOException;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Value("${jwt.secret-key}")
-    private final String secretKey;
-
-    private final JwtUtils jwtUtil;
+    private String secretKey;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
@@ -35,7 +33,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         if (token != null) {
             try {
-                Claims claims = jwtUtil.parseJWT(secretKey, token);
+                Claims claims = JwtUtils.parseJWT(secretKey, token);
                 Long userId = claims.get("userId", Long.class);
                 String username = claims.getSubject();
                 String role = claims.get("role", String.class);
