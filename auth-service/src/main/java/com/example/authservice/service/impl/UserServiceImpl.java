@@ -2,11 +2,12 @@ package com.example.authservice.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.example.primaryschoolmanagement.common.exception.ApiException;
-import com.example.primaryschoolmanagement.dao.UserDao;
-import com.example.primaryschoolmanagement.entity.AppUser;
-import com.example.primaryschoolmanagement.entity.Role;
+
+import com.example.authservice.dao.UserDao;
+import com.example.authservice.entity.AppUser;
+import com.example.authservice.entity.Role;
 import com.example.authservice.service.UserService;
+import com.example.exception.ApiException;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.Cache;

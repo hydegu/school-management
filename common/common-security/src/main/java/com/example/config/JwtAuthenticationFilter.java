@@ -1,7 +1,8 @@
 package com.example.config;
 
 
-import com.example.service.CustomUserDetailsService;
+
+import com.example.authservice.service.CustomUserDetailsService;
 import com.example.utils.JwtUtils;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;

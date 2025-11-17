@@ -1,8 +1,9 @@
-package com.example.primaryschoolmanagement.dao;
+package com.example.authservice.dao;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.example.primaryschoolmanagement.entity.AppUser;
-import com.example.primaryschoolmanagement.entity.Role;
+
+import com.example.authservice.entity.AppUser;
+import com.example.authservice.entity.Role;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 

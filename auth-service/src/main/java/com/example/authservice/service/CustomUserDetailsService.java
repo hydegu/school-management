@@ -1,6 +1,8 @@
 package com.example.authservice.service;
 
 
+import com.example.authservice.entity.AppUser;
+import com.example.authservice.entity.Role;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
