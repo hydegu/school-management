@@ -1,0 +1,45 @@
+# JWT双令牌配置示例
+# 将此配置复制到你的服务的application.yml或Nacos配置中心
+
+jwt:
+  # JWT密钥（必须至少32字符，建议使用更长的随机字符串）
+  # 生产环境请务必修改为复杂的密钥，并妥善保管
+  secret-key: "your-256-bit-secret-key-change-this-in-production-environment-now"
+
+  # AccessToken配置
+  access-token:
+    # AccessToken有效期（毫秒），默认15分钟
+    ttl: 900000  # 15 * 60 * 1000
+    # AccessToken请求头名称
+    token-name: "Authorization"
+
+  # RefreshToken配置
+  refresh-token:
+    # RefreshToken有效期（毫秒），默认7天
+    ttl: 604800000  # 7 * 24 * 60 * 60 * 1000
+    # RefreshToken请求头名称
+    token-name: "Refresh-Token"
+    # RefreshToken在Redis中的key前缀
+    redis-key-prefix: "refresh_token:"
+
+# Redis配置（用于存储RefreshToken）
+spring:
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      password: # 如果有密码请填写
+      database: 0
+      timeout: 3000ms
+      lettuce:
+        pool:
+          max-active: 8
+          max-idle: 8
+          min-idle: 0
+          max-wait: -1ms
+
+# 日志配置（可选）
+logging:
+  level:
+    com.example.filter.JwtAuthenticationFilter: DEBUG
+    com.example.service.TokenService: INFO

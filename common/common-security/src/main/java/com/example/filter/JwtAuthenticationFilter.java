@@ -1,5 +1,6 @@
 package com.example.filter;
 
+import com.example.config.JwtProperties;
 import com.example.context.UserContext;
 import com.example.utils.JwtUtils;
 import io.jsonwebtoken.Claims;
@@ -7,20 +8,23 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
-// common/filter/JwtAuthenticationFilter.java
+/**
+ * JWT认证过滤器 - 支持双令牌机制
+ * 只验证AccessToken，RefreshToken仅在刷新接口使用
+ */
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    @Value("${jwt.secret-key}")
-    private String secretKey;
+    private final JwtProperties jwtProperties;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
@@ -31,20 +35,37 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         if (token != null) {
             try {
-                Claims claims = JwtUtils.parseJWT(secretKey, token);
-                Long userId = claims.get("userId", Long.class);
-                String username = claims.getSubject();
-                String role = claims.get("role", String.class);
+                // 解析JWT
+                Claims claims = JwtUtils.parseJWT(jwtProperties.getSecretKey(), token);
 
+                // 验证令牌类型：只接受AccessToken
+                if (!JwtUtils.isTokenType(claims, JwtUtils.TOKEN_TYPE_ACCESS)) {
+                    log.warn("令牌类型不正确，期望AccessToken");
+                    sendUnauthorizedResponse(response, "令牌类型不正确");
+                    return;
+                }
+
+                // 提取用户信息
+                Long userId = JwtUtils.getUserIdFromClaims(claims);
+                String username = claims.getSubject();
+                String role = JwtUtils.getRoleFromClaims(claims);
+
+                if (userId == null || username == null) {
+                    log.warn("令牌缺少必要的用户信息");
+                    sendUnauthorizedResponse(response, "令牌信息不完整");
+                    return;
+                }
+
+                // 设置用户上下文
                 UserContext.setUserId(userId.toString());
                 UserContext.setUsername(username);
                 UserContext.setRole(role);
 
+                log.debug("用户认证成功: userId={}, username={}, role={}", userId, username, role);
+
             } catch (Exception e) {
                 log.warn("JWT验证失败: {}", e.getMessage());
-                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                response.setContentType("application/json;charset=UTF-8");
-                response.getWriter().write("{\"code\":401,\"message\":\"Token无效\"}");
+                sendUnauthorizedResponse(response, "Token无效或已过期");
                 return;
             }
         }
@@ -56,11 +77,23 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
     }
 
+    /**
+     * 从请求头中获取Token
+     */
     private String getTokenFromRequest(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
         if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
             return bearerToken.substring(7);
         }
         return null;
+    }
+
+    /**
+     * 发送未授权响应
+     */
+    private void sendUnauthorizedResponse(HttpServletResponse response, String message) throws IOException {
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        response.setContentType("application/json;charset=UTF-8");
+        response.getWriter().write(String.format("{\"code\":401,\"message\":\"%s\"}", message));
     }
 }

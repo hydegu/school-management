@@ -8,17 +8,97 @@ import lombok.extern.slf4j.Slf4j;
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
 /**
- * JWT 工具类
+ * JWT 工具类 - 支持双令牌机制（AccessToken + RefreshToken）
  */
 @Slf4j
 public class JwtUtils {
 
     private JwtUtils() {
         // 工具类，禁止实例化
+    }
+
+    // 令牌类型常量
+    public static final String TOKEN_TYPE_ACCESS = "access";
+    public static final String TOKEN_TYPE_REFRESH = "refresh";
+    public static final String CLAIM_TOKEN_TYPE = "tokenType";
+    public static final String CLAIM_USER_ID = "userId";
+    public static final String CLAIM_ROLE = "role";
+
+    /**
+     * 创建访问令牌（AccessToken）
+     *
+     * @param secretKey JWT 密钥
+     * @param ttlMillis 有效期（毫秒）
+     * @param userId    用户ID
+     * @param username  用户名
+     * @param role      用户角色
+     * @return AccessToken
+     */
+    public static String createAccessToken(String secretKey, long ttlMillis, Long userId, String username, String role) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put(CLAIM_TOKEN_TYPE, TOKEN_TYPE_ACCESS);
+        claims.put(CLAIM_USER_ID, userId);
+        claims.put(CLAIM_ROLE, role);
+        return createJwt(secretKey, ttlMillis, username, claims);
+    }
+
+    /**
+     * 创建刷新令牌（RefreshToken）
+     *
+     * @param secretKey JWT 密钥
+     * @param ttlMillis 有效期（毫秒）
+     * @param userId    用户ID
+     * @param username  用户名
+     * @return RefreshToken
+     */
+    public static String createRefreshToken(String secretKey, long ttlMillis, Long userId, String username) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put(CLAIM_TOKEN_TYPE, TOKEN_TYPE_REFRESH);
+        claims.put(CLAIM_USER_ID, userId);
+        return createJwt(secretKey, ttlMillis, username, claims);
+    }
+
+    /**
+     * 验证令牌类型
+     *
+     * @param claims      JWT Claims
+     * @param tokenType   期望的令牌类型
+     * @return true表示类型匹配
+     */
+    public static boolean isTokenType(Claims claims, String tokenType) {
+        String type = claims.get(CLAIM_TOKEN_TYPE, String.class);
+        return tokenType.equals(type);
+    }
+
+    /**
+     * 从Claims中获取用户ID
+     *
+     * @param claims JWT Claims
+     * @return 用户ID
+     */
+    public static Long getUserIdFromClaims(Claims claims) {
+        Object userIdObj = claims.get(CLAIM_USER_ID);
+        if (userIdObj instanceof Integer) {
+            return ((Integer) userIdObj).longValue();
+        } else if (userIdObj instanceof Long) {
+            return (Long) userIdObj;
+        }
+        return null;
+    }
+
+    /**
+     * 从Claims中获取角色
+     *
+     * @param claims JWT Claims
+     * @return 角色
+     */
+    public static String getRoleFromClaims(Claims claims) {
+        return claims.get(CLAIM_ROLE, String.class);
     }
 
     /**
