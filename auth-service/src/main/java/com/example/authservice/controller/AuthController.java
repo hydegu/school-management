@@ -3,8 +3,12 @@ package com.example.authservice.controller;
 import com.example.authservice.entity.AppUser;
 import com.example.authservice.entity.Role;
 import com.example.authservice.service.UserService;
+import com.example.dto.LoginRequest;
+import com.example.dto.LogoutRequest;
+import com.example.dto.RefreshRequest;
 import com.example.service.TokenService;
 import com.example.utils.R;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -17,7 +21,7 @@ import java.util.Map;
  */
 @Slf4j
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/api/auth")
 @RequiredArgsConstructor
 public class AuthController {
 
@@ -52,22 +56,21 @@ public class AuthController {
 
         // 获取用户角色
         Role role = userService.selectRolesByUserId(user.getId());
-        String roleName = role != null ? role.getRoleName() : "USER";
+        String roleName = role != null ? role.getRoleName() : "";
 
         // 生成双令牌
         Map<String, Object> tokens = tokenService.generateTokens(
                 user.getId().longValue(),
-                user.getUserName(),
+                user.getUsername(),
                 roleName
         );
 
-        log.info("用户 {} 登录成功", user.getUserName());
+        log.info("用户 {} 登录成功", user.getUsername());
         return R.ok(tokens);
     }
 
     /**
      * 刷新令牌 - 使用RefreshToken获取新的双令牌
-     *
      * @param refreshRequest 刷新请求
      * @return 新的双令牌
      */
@@ -105,28 +108,9 @@ public class AuthController {
         }
     }
 
-    /**
-     * 登录请求DTO
-     */
-    @lombok.Data
-    public static class LoginRequest {
-        private String identifier; // 用户名或邮箱
-        private String password;
-    }
 
-    /**
-     * 刷新令牌请求DTO
-     */
-    @lombok.Data
-    public static class RefreshRequest {
-        private String refreshToken;
-    }
 
-    /**
-     * 登出请求DTO
-     */
-    @lombok.Data
-    public static class LogoutRequest {
-        private Long userId;
-    }
+
+
+
 }

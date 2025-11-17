@@ -1,2 +1,39 @@
 jwt:
   secret-key: +kJ8A7Cw9b9hhPNULgUTYsXWLJI0TIsuLtGX99A+I3M=
+    # AccessToken配置
+  access-token:
+    # AccessToken有效期（毫秒），默认15分钟
+    ttl: 900000  # 15 * 60 * 1000
+    # AccessToken请求头名称
+    token-name: "Authorization"
+
+  # RefreshToken配置
+  refresh-token:
+    # RefreshToken有效期（毫秒），默认7天
+    ttl: 604800000  # 7 * 24 * 60 * 60 * 1000
+    # RefreshToken请求头名称
+    token-name: "Refresh-Token"
+    # RefreshToken在Redis中的key前缀
+    redis-key-prefix: "refresh_token:"
+
+# Redis配置（用于存储RefreshToken）
+spring:
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      password: 123456
+      database: 0
+      timeout: 3000ms
+      lettuce:
+        pool:
+          max-active: 8
+          max-idle: 8
+          min-idle: 0
+          max-wait: -1ms
+
+# 日志配置（可选）
+logging:
+  level:
+    com.example.filter.JwtAuthenticationFilter: DEBUG
+    com.example.service.TokenService: INFO

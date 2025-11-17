@@ -41,7 +41,7 @@ public class UserServiceImpl extends ServiceImpl<UserDao, AppUser> implements Us
     @Cacheable(cacheNames = "users:profile", key = "#name", unless = "#result == null")
     public AppUser findByUserName(String name) {
         return userRepo.selectOne(new LambdaQueryWrapper<AppUser>()
-                .eq(AppUser::getUserName, name));
+                .eq(AppUser::getUsername, name));
     }
 
     @Override
@@ -57,7 +57,7 @@ public class UserServiceImpl extends ServiceImpl<UserDao, AppUser> implements Us
         }
         String value = identifier.trim();
         LambdaQueryWrapper<AppUser> query = new LambdaQueryWrapper<>();
-        query.eq(AppUser::getUserName, value)
+        query.eq(AppUser::getUsername, value)
                 .or()
                 .eq(AppUser::getEmail, value);
         AppUser user = userRepo.selectOne(query);

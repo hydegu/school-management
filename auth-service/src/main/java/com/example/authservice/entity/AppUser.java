@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 public class AppUser extends BaseEntity {
     @TableId(type = IdType.AUTO)
     private Integer id;
-    private String userName;
+    private String username;
     private String password;
     private String realName;
     private Boolean userType;
@@ -25,7 +25,7 @@ public class AppUser extends BaseEntity {
     private String phone;
     private String email;
     private Byte gender;
-    private Boolean status;
+    private Byte status;
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDateTime lastLoginTime;
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
