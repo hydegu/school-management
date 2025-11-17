@@ -65,13 +65,14 @@ public class TokenService {
     }
 
     /**
-     * 刷新AccessToken
+     * 刷新AccessToken（需要提供roleProvider获取最新角色）
      *
      * @param refreshToken RefreshToken
+     * @param roleProvider 角色提供者（根据userId获取最新角色）
      * @return 新的双令牌
      * @throws IllegalArgumentException 如果RefreshToken无效
      */
-    public Map<String, Object> refreshAccessToken(String refreshToken) {
+    public Map<String, Object> refreshAccessToken(String refreshToken, RoleProvider roleProvider) {
         try {
             // 解析RefreshToken
             Claims claims = JwtUtils.parseJWT(jwtProperties.getSecretKey(), refreshToken);
@@ -102,19 +103,37 @@ public class TokenService {
                 throw new IllegalArgumentException("RefreshToken不匹配");
             }
 
-            // 从数据库或缓存获取用户最新的角色信息（这里简化处理，从claims获取）
-            String role = JwtUtils.getRoleFromClaims(claims);
+            // ✅ 修复：从roleProvider获取用户最新的角色信息（而不是从RefreshToken中获取）
+            // 这样可以确保用户角色变更后，刷新令牌时使用最新的角色
+            String role = roleProvider != null ? roleProvider.getRole(userId) : null;
+            if (role == null) {
+                log.warn("无法获取用户 {} 的角色信息，使用默认角色", userId);
+                role = "USER";  // 默认角色
+            }
 
             // 生成新的双令牌
             Map<String, Object> newTokens = generateTokens(userId, username, role);
 
-            log.info("用户 {} 刷新令牌成功", username);
+            log.info("用户 {} 刷新令牌成功，角色: {}", username, role);
             return newTokens;
 
         } catch (Exception e) {
             log.error("刷新令牌失败: {}", e.getMessage());
             throw new IllegalArgumentException("RefreshToken无效: " + e.getMessage());
         }
+    }
+
+    /**
+     * 角色提供者接口 - 用于刷新令牌时获取最新角色
+     */
+    @FunctionalInterface
+    public interface RoleProvider {
+        /**
+         * 根据用户ID获取角色
+         * @param userId 用户ID
+         * @return 角色名称
+         */
+        String getRole(Long userId);
     }
 
     /**
