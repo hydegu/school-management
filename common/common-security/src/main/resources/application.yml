@@ -11,10 +11,14 @@ jwt:
   refresh-token:
     # RefreshToken有效期（毫秒），默认7天
     ttl: 604800000  # 7 * 24 * 60 * 60 * 1000
-    # RefreshToken请求头名称
+    # RefreshToken名称（用作Cookie名或请求头名）
     token-name: "Refresh-Token"
     # RefreshToken在Redis中的key前缀
     redis-key-prefix: "refresh_token:"
+
+    # 设置为true时，RefreshToken将通过HttpOnly Cookie返回
+    use-cookie: true
+
 
 # Redis配置（用于存储RefreshToken）
 spring:

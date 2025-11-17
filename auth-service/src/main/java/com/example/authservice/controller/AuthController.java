@@ -1,23 +1,19 @@
 package com.example.authservice.controller;
 
-import com.example.authservice.entity.AppUser;
-import com.example.authservice.entity.Role;
-import com.example.authservice.service.UserService;
-import com.example.dto.LoginRequest;
-import com.example.dto.LogoutRequest;
-import com.example.dto.RefreshRequest;
-import com.example.service.TokenService;
+import com.example.authservice.dto.AuthResponse;
+import com.example.authservice.dto.LoginRequest;
+import com.example.authservice.dto.LogoutRequest;
+import com.example.authservice.dto.RefreshRequest;
+import com.example.authservice.service.AuthService;
 import com.example.utils.R;
-import lombok.Data;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
-
 /**
- * 认证控制器 - 支持双令牌机制
+ * 认证控制器 - 负责接收请求和返回响应
  */
 @Slf4j
 @RestController
@@ -25,92 +21,69 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class AuthController {
 
-    private final UserService userService;
-    private final TokenService tokenService;
-    private final PasswordEncoder passwordEncoder;
+    private final AuthService authService;
 
     /**
-     * 用户登录 - 返回AccessToken和RefreshToken
+     * 用户登录
      *
-     * @param loginRequest 登录请求
-     * @return 双令牌
+     * @param request  登录请求
+     * @param response HttpServletResponse
+     * @return 认证响应
      */
     @PostMapping("/login")
-    public R<Map<String, Object>> login(@RequestBody LoginRequest loginRequest) {
-        log.info("用户登录请求: {}", loginRequest.getIdentifier());
-
-        // 查找用户
-        AppUser user = userService.findByIdentifier(loginRequest.getIdentifier())
-                .orElseThrow(() -> new IllegalArgumentException("用户名或密码错误"));
-
-        // 验证密码
-        if (!passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
-            log.warn("用户 {} 密码错误", loginRequest.getIdentifier());
-            throw new IllegalArgumentException("用户名或密码错误");
+    public R<AuthResponse> login(@RequestBody LoginRequest request, HttpServletResponse response) {
+        try {
+            AuthResponse authResponse = authService.login(request, response);
+            return R.ok(authResponse);
+        } catch (IllegalArgumentException e) {
+            log.warn("登录失败: {}", e.getMessage());
+            return R.error(401, e.getMessage());
+        } catch (Exception e) {
+            log.error("登录异常: ", e);
+            return R.error(500, "登录失败");
         }
-
-        // 检查用户状态
-        if (user.getStatus() != 1) {
-            throw new IllegalArgumentException("用户已被禁用");
-        }
-
-        // 获取用户角色
-        Role role = userService.selectRolesByUserId(user.getId());
-        String roleName = role != null ? role.getRoleName() : "";
-
-        // 生成双令牌
-        Map<String, Object> tokens = tokenService.generateTokens(
-                user.getId().longValue(),
-                user.getUsername(),
-                roleName
-        );
-
-        log.info("用户 {} 登录成功", user.getUsername());
-        return R.ok(tokens);
     }
 
     /**
-     * 刷新令牌 - 使用RefreshToken获取新的双令牌
-     * @param refreshRequest 刷新请求
-     * @return 新的双令牌
+     * 刷新令牌
+     *
+     * @param refreshRequest 刷新请求（可选，Cookie模式下不需要）
+     * @param request        HttpServletRequest
+     * @param response       HttpServletResponse
+     * @return 认证响应
      */
     @PostMapping("/refresh")
-    public R<Map<String, Object>> refresh(@RequestBody RefreshRequest refreshRequest) {
-        log.info("令牌刷新请求");
-
+    public R<AuthResponse> refresh(@RequestBody(required = false) RefreshRequest refreshRequest,
+                                    HttpServletRequest request,
+                                    HttpServletResponse response) {
         try {
-            Map<String, Object> newTokens = tokenService.refreshAccessToken(refreshRequest.getRefreshToken());
-            log.info("令牌刷新成功");
-            return R.ok(newTokens);
+            String refreshToken = refreshRequest != null ? refreshRequest.getRefreshToken() : null;
+            AuthResponse authResponse = authService.refreshToken(refreshToken, request, response);
+            return R.ok(authResponse);
+        } catch (IllegalArgumentException e) {
+            log.warn("刷新令牌失败: {}", e.getMessage());
+            return R.error(401, e.getMessage());
         } catch (Exception e) {
-            log.error("令牌刷新失败: {}", e.getMessage());
-            return R.error(401, "刷新令牌无效或已过期");
+            log.error("刷新令牌异常: ", e);
+            return R.error(500, "刷新令牌失败");
         }
     }
 
     /**
-     * 用户登出 - 撤销RefreshToken
+     * 用户登出
      *
-     * @param logoutRequest 登出请求
+     * @param request  登出请求
+     * @param response HttpServletResponse
      * @return 登出结果
      */
     @PostMapping("/logout")
-    public R<String> logout(@RequestBody LogoutRequest logoutRequest) {
-        log.info("用户登出请求: userId={}", logoutRequest.getUserId());
-
+    public R<String> logout(@RequestBody LogoutRequest request, HttpServletResponse response) {
         try {
-            tokenService.revokeRefreshToken(logoutRequest.getUserId());
-            log.info("用户 {} 登出成功", logoutRequest.getUserId());
+            authService.logout(request.getUserId(), response);
             return R.ok("登出成功");
         } catch (Exception e) {
-            log.error("用户登出失败: {}", e.getMessage());
+            log.error("登出异常: ", e);
             return R.error(500, "登出失败");
         }
     }
-
-
-
-
-
-
 }
