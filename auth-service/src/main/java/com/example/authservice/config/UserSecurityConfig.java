@@ -1,9 +1,6 @@
 package com.example.authservice.config;
 
 import com.example.authservice.service.CustomUserDetailsService;
-import com.example.config.JwtAccessDeniedHandler;
-import com.example.config.JwtAuthenticationEntryPoint;
-import com.example.config.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
