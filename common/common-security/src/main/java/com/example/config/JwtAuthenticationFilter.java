@@ -18,7 +18,6 @@ import java.io.IOException;
 // common/filter/JwtAuthenticationFilter.java
 @Slf4j
 @Component
-@RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Value("${jwt.secret-key}")

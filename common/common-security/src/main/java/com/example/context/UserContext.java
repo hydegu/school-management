@@ -34,5 +34,6 @@ public class UserContext {
     public static void clear() {
         userIdHolder.remove();
         usernameHolder.remove();
+        roleHolder.remove();
     }
 }
