@@ -1,4 +1,4 @@
-package com.example.primaryschoolmanagement.config;
+package com.example.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;

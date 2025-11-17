@@ -1,4 +1,4 @@
-package com.example.primaryschoolmanagement.config;
+package com.example.config;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;

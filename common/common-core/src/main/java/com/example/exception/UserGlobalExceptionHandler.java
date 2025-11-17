@@ -1,4 +1,4 @@
-package com.example.primaryschoolmanagement.config;
+package com.example.exception;
 
 
 import com.example.primaryschoolmanagement.common.exception.GlobalExceptionHandler;

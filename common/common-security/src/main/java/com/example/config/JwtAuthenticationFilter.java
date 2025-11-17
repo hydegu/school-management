@@ -1,4 +1,4 @@
-package com.example.primaryschoolmanagement.config;
+package com.example.config;
 
 import com.example.primaryschoolmanagement.common.utils.JwtUtils;
 import com.example.primaryschoolmanagement.service.CustomUserDetailsService;
@@ -10,7 +10,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.MDC;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;

@@ -1,4 +1,4 @@
-package com.example.primaryschoolmanagement.config;
+package com.example.config;
 
 import com.baomidou.mybatisplus.annotation.DbType;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;

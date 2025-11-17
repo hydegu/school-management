@@ -1,4 +1,4 @@
-package com.example.primaryschoolmanagement.config;
+package com.example.config;
 
 
 
