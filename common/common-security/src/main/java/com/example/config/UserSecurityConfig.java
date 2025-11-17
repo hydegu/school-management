@@ -2,7 +2,8 @@ package com.example.config;
 
 
 
-import com.example.primaryschoolmanagement.service.CustomUserDetailsService;
+
+import com.example.service.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;

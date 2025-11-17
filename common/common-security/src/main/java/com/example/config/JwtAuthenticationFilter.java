@@ -1,7 +1,8 @@
 package com.example.config;
 
-import com.example.primaryschoolmanagement.common.utils.JwtUtils;
-import com.example.primaryschoolmanagement.service.CustomUserDetailsService;
+
+import com.example.service.CustomUserDetailsService;
+import com.example.utils.JwtUtils;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;

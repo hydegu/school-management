@@ -1,4 +1,4 @@
-package com.example.primaryschoolmanagement.service;
+package com.example.authservice.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.example.primaryschoolmanagement.entity.AppUser;
@@ -6,7 +6,6 @@ import com.example.primaryschoolmanagement.entity.Role;
 import org.springframework.stereotype.Service;
 
 
-import java.util.List;
 import java.util.Optional;
 
 @Service

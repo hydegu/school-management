@@ -1,7 +1,6 @@
-package com.example.primaryschoolmanagement.service;
+package com.example.authservice.service;
 
-import com.example.primaryschoolmanagement.entity.AppUser;
-import com.example.primaryschoolmanagement.entity.Role;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;

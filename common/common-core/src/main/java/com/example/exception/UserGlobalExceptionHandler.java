@@ -1,7 +1,7 @@
 package com.example.exception;
 
 
-import com.example.primaryschoolmanagement.common.exception.GlobalExceptionHandler;
+
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
