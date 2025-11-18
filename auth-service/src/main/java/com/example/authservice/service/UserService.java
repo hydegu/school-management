@@ -4,12 +4,10 @@ import com.baomidou.mybatisplus.extension.service.IService;
 
 import com.example.authservice.entity.AppUser;
 import com.example.authservice.entity.Role;
-import org.springframework.stereotype.Service;
 
 
 import java.util.Optional;
 
-@Service
 public interface UserService extends IService<AppUser> {
 
     Role selectRolesByUserId(Integer userId);

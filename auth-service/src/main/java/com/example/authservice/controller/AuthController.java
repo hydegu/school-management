@@ -35,7 +35,7 @@ public class AuthController {
         try {
             AuthResponse authResponse = authService.login(request, response);
             return R.ok(authResponse);
-        } catch (IllegalArgumentException e) {
+        }  catch (IllegalArgumentException e) {
             log.warn("登录失败: {}", e.getMessage());
             return R.error(401, e.getMessage());
         } catch (Exception e) {

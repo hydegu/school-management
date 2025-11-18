@@ -103,8 +103,7 @@ public class TokenService {
                 throw new IllegalArgumentException("RefreshToken不匹配");
             }
 
-            // ✅ 修复：从roleProvider获取用户最新的角色信息（而不是从RefreshToken中获取）
-            // 这样可以确保用户角色变更后，刷新令牌时使用最新的角色
+            // 从roleProvider获取用户最新的角色信息
             String role = roleProvider != null ? roleProvider.getRole(userId) : null;
             if (role == null) {
                 log.warn("无法获取用户 {} 的角色信息，使用默认角色", userId);

@@ -1,31 +1,58 @@
+version: '3.8'
+
 services:
-  mysql:
-    image: 'mysql:latest'
-    container_name: school-mysql
-    environment:
-      - 'MYSQL_DATABASE=school_management'
-      - 'MYSQL_ROOT_PASSWORD=123456'
-      - 'TZ=Asia/Shanghai'
-    volumes:
-      - mysql-data:/var/lib/mysql
-      - ./mysql/init:/docker-entrypoint-initdb.d
-    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
-    ports:
-      - '3306'
+  # Redis
   redis:
-    image: 'redis:latest'
-    container_name: school-redis
-    command: redis-server --requirepass 123456 --appendonly yes
+    image: redis:7-alpine
+    container_name: redis
+    ports:
+      - "6379:6379"
+    command: redis-server --appendonly yes --requirepass yourpassword
     volumes:
       - redis-data:/data
+    networks:
+      - school-network
+
+  # Nacos 服务
+  nacos:
+    image: nacos/nacos-server:v2.3.0
+    container_name: nacos
     ports:
-      - '6379:6379'
+      - "8848:8848"
+      - "9848:9848"
+      - "9849:9849"
+    environment:
+      - MODE=standalone
+      - PREFER_HOST_MODE=hostname
+      - JVM_XMS=512m
+      - JVM_XMX=512m
+    volumes:
+      - nacos-data:/home/nacos/data
+      - nacos-logs:/home/nacos/logs
+    networks:
+      - school-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8848/nacos/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Sentinel Dashboard 控制台
+  sentinel-dashboard:
+    image: bladex/sentinel-dashboard:1.8.6
+    container_name: sentinel-dashboard
+    ports:
+      - "8858:8858"
+    environment:
+      - JAVA_OPTS=-Dserver.port=8858 -Dcsp.sentinel.dashboard.server=localhost:8858 -Dproject.name=sentinel-dashboard
+    networks:
+      - school-network
+
 volumes:
-  mysql-data:
-    driver: local
   redis-data:
-    driver: local
   nacos-data:
-    driver: local
   nacos-logs:
-    driver: local
+
+networks:
+  school-network:
+    driver: bridge

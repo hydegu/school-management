@@ -14,6 +14,7 @@ import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -25,10 +26,11 @@ import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 
 import java.time.Duration;
 
-@AutoConfiguration
-@AutoConfigureAfter(RedisAutoConfiguration.class)
-@ConditionalOnClass(RedisConnectionFactory.class)
-@ConditionalOnBean(RedisConnectionFactory.class)
+//@AutoConfiguration
+//@AutoConfigureAfter(RedisAutoConfiguration.class)
+//@ConditionalOnClass(RedisConnectionFactory.class)
+//@ConditionalOnBean(RedisConnectionFactory.class)
+@Configuration
 @EnableCaching
 public class RedisConfig {
 
