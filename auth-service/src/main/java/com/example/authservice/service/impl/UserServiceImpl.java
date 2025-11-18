@@ -83,7 +83,7 @@ public class UserServiceImpl extends ServiceImpl<UserDao, AppUser> implements Us
     }
 
     @Override
-    @CacheEvict(cacheNames = "users:roles", key = "#user.userName()")
+    @Cacheable(cacheNames = "users:roles", key = "#userId", unless = "#result == null")
     public Role selectRolesByUserId(Integer userId) {
         return userRepo.selectRolesByUserId(userId);
     }

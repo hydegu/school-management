@@ -45,7 +45,7 @@ public class AuthServiceImpl implements AuthService {
 
         // 1. 查找用户
         AppUser user = userService.findByIdentifier(request.getIdentifier())
-                .orElseThrow(() -> new IllegalArgumentException("用户名或密码错误"));
+                .orElseThrow(() -> new IllegalArgumentException("未找到用户"));
 
         // 2. 验证密码
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
@@ -87,7 +87,7 @@ public class AuthServiceImpl implements AuthService {
             // 2. 刷新令牌（使用roleProvider获取最新角色）
             Map<String, Object> newTokens = tokenService.refreshAccessToken(token, userId -> {
                 Role role = userService.selectRolesByUserId(userId.intValue());
-                return role != null ? role.getRoleName() : "USER";
+                return role != null ? role.getRoleCode() : "student";
             });
 
             // 3. 构建响应
