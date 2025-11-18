@@ -71,7 +71,6 @@ public class AuthServiceImpl implements AuthService {
 
         // 6. 构建响应
         AuthResponse authResponse = buildAuthResponse(tokens, response);
-
         log.info("用户 {} 登录成功，RefreshToken模式: {}", user.getUsername(), authResponse.getRefreshTokenMode());
         return authResponse;
     }
