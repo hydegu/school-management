@@ -1,0 +1,97 @@
+package com.example.businessservice.coursechange.entity;
+
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
+import com.example.base.BaseEntity;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Data;
+import lombok.experimental.Accessors;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
+/**
+ * 调课申请实体类
+ */
+@Data
+@TableName("biz_course_change")
+@Accessors(chain = true)
+public class BizCourseChange extends BaseEntity {
+
+    @TableId(type = IdType.AUTO)
+    private Long id;
+
+    /**
+     * 调课单号
+     */
+    private String changeNo;
+
+    /**
+     * 申请教师ID
+     */
+    private Long applyTeacherId;
+
+    /**
+     * 申请教师姓名
+     */
+    private String applyTeacherName;
+
+    /**
+     * 原课程表ID
+     */
+    private Long originalScheduleId;
+
+    /**
+     * 原上课日期
+     */
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
+    private LocalDate originalDate;
+
+    /**
+     * 原上课节次
+     */
+    private Integer originalPeriod;
+
+    /**
+     * 新上课日期
+     */
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
+    private LocalDate newDate;
+
+    /**
+     * 新上课节次
+     */
+    private Integer newPeriod;
+
+    /**
+     * 新教室
+     */
+    private String newClassroom;
+
+    /**
+     * 调课原因
+     */
+    private String reason;
+
+    /**
+     * 申请时间
+     */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    private LocalDateTime applyTime;
+
+    /**
+     * 审批状态：1-待审批 2-已通过 3-已拒绝 4-已撤回
+     */
+    private Integer approvalStatus;
+
+    /**
+     * 关联审批记录ID
+     */
+    private Long approvalId;
+
+    /**
+     * 备注
+     */
+    private String remark;
+}
