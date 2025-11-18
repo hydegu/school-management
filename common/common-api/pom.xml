@@ -25,13 +25,6 @@
             <version>${project.version}</version>
         </dependency>
 
-        <!-- 依赖 common-core -->
-        <dependency>
-            <groupId>com.example</groupId>
-            <artifactId>common-core</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-        </dependency>
-
         <!-- OpenFeign -->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
