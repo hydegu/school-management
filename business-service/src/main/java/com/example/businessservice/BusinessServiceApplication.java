@@ -10,10 +10,9 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
  * 业务服务启动类
  * 负责处理请假、调课、换课、调班等审批业务
  */
-@SpringBootApplication(scanBasePackages = {"com.example"})
+@SpringBootApplication
 @EnableDiscoveryClient
-@EnableFeignClients(basePackages = {"com.example.client"})
-@MapperScan("com.example.businessservice.**.dao")
+@EnableFeignClients
 public class BusinessServiceApplication {
 
     public static void main(String[] args) {

@@ -50,10 +50,10 @@ public interface LeaveDao extends BaseMapper<BizLeave> {
             AND l.approval_status = #{approvalStatus}
         </if>
         <if test="startDate != null">
-            AND l.start_date >= #{startDate}
+            AND l.start_date &gt;= #{startDate}
         </if>
         <if test="endDate != null">
-            AND l.end_date <= #{endDate}
+            AND l.end_date &lt;= #{endDate}
         </if>
         ORDER BY l.created_at DESC
         </script>

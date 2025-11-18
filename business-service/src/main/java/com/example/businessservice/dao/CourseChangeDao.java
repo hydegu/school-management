@@ -39,10 +39,10 @@ public interface CourseChangeDao extends BaseMapper<BizCourseChange> {
             AND cc.approval_status = #{approvalStatus}
         </if>
         <if test="startDate != null">
-            AND cc.original_date >= #{startDate}
+            AND cc.original_date &gt;= #{startDate}
         </if>
         <if test="endDate != null">
-            AND cc.original_date <= #{endDate}
+            AND cc.original_date &lt;= #{endDate}
         </if>
         ORDER BY cc.created_at DESC
         </script>

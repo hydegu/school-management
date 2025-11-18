@@ -20,7 +20,7 @@ spring:
       sentinel:
         enabled: true
 
-# Feign ????
+# Feign 超时配置
 feign:
   client:
     config:
