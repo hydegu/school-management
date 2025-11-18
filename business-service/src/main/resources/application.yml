@@ -9,21 +9,21 @@ spring:
     nacos:
       serverAddr: 127.0.0.1:8848
       discovery:
-        # ????? Nacos
+        # Nacos
         enabled: true
     sentinel:
       transport:
-        port: 8719           # ???? 8720?? post ????
+        port: 8719
         dashboard: localhost:8858
       eager: true
     openfeign:
       sentinel:
-        enabled: true  # ?? Feign ? Sentinel ??
+        enabled: true
 
 # Feign ????
 feign:
   client:
     config:
       default:
-        connectTimeout: 3000    # ???? 3?
-        readTimeout: 5000       # ???? 5?
+        connectTimeout: 3000
+        readTimeout: 5000
