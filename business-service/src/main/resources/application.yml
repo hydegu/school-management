@@ -19,11 +19,3 @@ spring:
     openfeign:
       sentinel:
         enabled: true
-
-# Feign 超时配置
-feign:
-  client:
-    config:
-      default:
-        connectTimeout: 3000
-        readTimeout: 5000
