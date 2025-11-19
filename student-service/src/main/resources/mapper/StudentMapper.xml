@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.studentservice.dao.StudentDao">
+
+    <!-- 学生VO结果映射 -->
+    <resultMap id="StudentVOMap" type="com.example.studentservice.vo.StudentVO">
+        <id column="id" property="id"/>
+        <result column="user_id" property="userId"/>
+        <result column="student_no" property="studentNo"/>
+        <result column="student_name" property="studentName"/>
+        <result column="gender" property="gender"/>
+        <result column="birth_date" property="birthDate"/>
+        <result column="id_card" property="idCard"/>
+        <result column="class_id" property="classId"/>
+        <result column="class_name" property="className"/>
+        <result column="grade_id" property="gradeId"/>
+        <result column="grade_name" property="gradeName"/>
+        <result column="created_at" property="createdAt"/>
+        <result column="updated_at" property="updatedAt"/>
+    </resultMap>
+
+    <!-- 基础查询列 -->
+    <sql id="BaseColumns">
+        s.id,
+        s.user_id,
+        s.student_no,
+        s.student_name,
+        s.gender,
+        s.birth_date,
+        s.id_card,
+        s.class_id,
+        s.grade_id,
+        s.created_at,
+        s.updated_at
+    </sql>
+
+    <!-- 关联查询列 -->
+    <sql id="DetailColumns">
+        <include refid="BaseColumns"/>,
+        c.class_name,
+        g.grade_name
+    </sql>
+
+    <!-- 基础查询条件 -->
+    <sql id="BaseWhere">
+        <where>
+            s.is_deleted = 0
+            <if test="req.keyword != null and req.keyword != ''">
+                AND (s.student_name LIKE CONCAT('%', #{req.keyword}, '%')
+                OR s.student_no LIKE CONCAT('%', #{req.keyword}, '%'))
+            </if>
+            <if test="req.classId != null">
+                AND s.class_id = #{req.classId}
+            </if>
+            <if test="req.gradeId != null">
+                AND s.grade_id = #{req.gradeId}
+            </if>
+            <if test="req.gender != null">
+                AND s.gender = #{req.gender}
+            </if>
+        </where>
+    </sql>
+
+    <!-- 分页查询学生列表 -->
+    <select id="selectStudentPage" resultMap="StudentVOMap">
+        SELECT
+        <include refid="DetailColumns"/>
+        FROM edu_student s
+        LEFT JOIN edu_class c ON s.class_id = c.id AND c.is_deleted = 0
+        LEFT JOIN edu_grade g ON s.grade_id = g.id AND g.is_deleted = 0
+        <include refid="BaseWhere"/>
+        ORDER BY s.created_at DESC
+    </select>
+
+    <!-- 根据ID查询学生详情 -->
+    <select id="selectStudentDetailById" resultMap="StudentVOMap">
+        SELECT
+        <include refid="DetailColumns"/>
+        FROM edu_student s
+        LEFT JOIN edu_class c ON s.class_id = c.id AND c.is_deleted = 0
+        LEFT JOIN edu_grade g ON s.grade_id = g.id AND g.is_deleted = 0
+        WHERE s.id = #{id} AND s.is_deleted = 0
+    </select>
+
+    <!-- 根据学号查询学生 -->
+    <select id="selectStudentByNo" resultMap="StudentVOMap">
+        SELECT
+        <include refid="DetailColumns"/>
+        FROM edu_student s
+        LEFT JOIN edu_class c ON s.class_id = c.id AND c.is_deleted = 0
+        LEFT JOIN edu_grade g ON s.grade_id = g.id AND g.is_deleted = 0
+        WHERE s.student_no = #{studentNo} AND s.is_deleted = 0
+    </select>
+
+</mapper>
