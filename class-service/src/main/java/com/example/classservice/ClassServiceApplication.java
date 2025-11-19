@@ -12,7 +12,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
  */
 @SpringBootApplication(scanBasePackages = {"com.example.classservice", "com.example"})
 @EnableDiscoveryClient
-@EnableFeignClients(basePackages = {"com.example.client", "com.example.classservice.feign"})
+@EnableFeignClients(basePackages = "com.example.client")
 @MapperScan("com.example.classservice.dao")
 public class ClassServiceApplication {
 
