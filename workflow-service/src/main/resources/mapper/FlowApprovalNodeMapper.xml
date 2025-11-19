@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.workflowservice.dao.FlowApprovalNodeDao">
+
+    <!-- 节点VO结果映射 -->
+    <resultMap id="ApprovalNodeVOMap" type="com.example.workflowservice.vo.ApprovalNodeVO">
+        <id column="id" property="id"/>
+        <result column="approval_id" property="approvalId"/>
+        <result column="node_level" property="nodeLevel"/>
+        <result column="approver_id" property="approverId"/>
+        <result column="approver_name" property="approverName"/>
+        <result column="approval_status" property="approvalStatus"/>
+        <result column="approval_time" property="approvalTime"/>
+        <result column="approval_opinion" property="approvalOpinion"/>
+    </resultMap>
+
+    <!-- 根据审批ID查询节点列表 -->
+    <select id="selectNodesByApprovalId" resultMap="ApprovalNodeVOMap">
+        SELECT
+            id,
+            approval_id,
+            node_level,
+            approver_id,
+            approver_name,
+            approval_status,
+            approval_time,
+            approval_opinion
+        FROM flow_approval_node
+        WHERE approval_id = #{approvalId}
+        ORDER BY node_level ASC
+    </select>
+
+</mapper>

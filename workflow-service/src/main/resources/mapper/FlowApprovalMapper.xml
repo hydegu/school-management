@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.workflowservice.dao.FlowApprovalDao">
+
+    <!-- 审批VO结果映射 -->
+    <resultMap id="ApprovalVOMap" type="com.example.workflowservice.vo.ApprovalVO">
+        <id column="id" property="id"/>
+        <result column="approval_no" property="approvalNo"/>
+        <result column="process_id" property="processId"/>
+        <result column="process_name" property="processName"/>
+        <result column="apply_user_id" property="applyUserId"/>
+        <result column="apply_user_type" property="applyUserType"/>
+        <result column="apply_time" property="applyTime"/>
+        <result column="business_type" property="businessType"/>
+        <result column="business_id" property="businessId"/>
+        <result column="approval_status" property="approvalStatus"/>
+        <result column="current_approver_id" property="currentApproverId"/>
+        <result column="reason" property="reason"/>
+        <result column="created_at" property="createdAt"/>
+        <result column="updated_at" property="updatedAt"/>
+    </resultMap>
+
+    <!-- 基础查询列 -->
+    <sql id="BaseColumns">
+        a.id,
+        a.approval_no,
+        a.process_id,
+        a.apply_user_id,
+        a.apply_user_type,
+        a.apply_time,
+        a.business_type,
+        a.business_id,
+        a.approval_status,
+        a.current_approver_id,
+        a.reason,
+        a.created_at,
+        a.updated_at
+    </sql>
+
+    <!-- 详细查询列 -->
+    <sql id="DetailColumns">
+        <include refid="BaseColumns"/>,
+        p.process_name
+    </sql>
+
+    <!-- 基础查询条件 -->
+    <sql id="BaseWhere">
+        <where>
+            a.is_deleted = 0
+            <if test="req.approvalNo != null and req.approvalNo != ''">
+                AND a.approval_no = #{req.approvalNo}
+            </if>
+            <if test="req.applyUserId != null">
+                AND a.apply_user_id = #{req.applyUserId}
+            </if>
+            <if test="req.businessType != null">
+                AND a.business_type = #{req.businessType}
+            </if>
+            <if test="req.approvalStatus != null">
+                AND a.approval_status = #{req.approvalStatus}
+            </if>
+            <if test="req.currentApproverId != null">
+                AND a.current_approver_id = #{req.currentApproverId}
+            </if>
+        </where>
+    </sql>
+
+    <!-- 分页查询审批列表 -->
+    <select id="selectApprovalPage" resultMap="ApprovalVOMap">
+        SELECT
+        <include refid="DetailColumns"/>
+        FROM flow_approval a
+        LEFT JOIN flow_process p ON a.process_id = p.id AND p.is_deleted = 0
+        <include refid="BaseWhere"/>
+        ORDER BY a.created_at DESC
+    </select>
+
+    <!-- 根据ID查询审批详情 -->
+    <select id="selectApprovalDetailById" resultMap="ApprovalVOMap">
+        SELECT
+        <include refid="DetailColumns"/>
+        FROM flow_approval a
+        LEFT JOIN flow_process p ON a.process_id = p.id AND p.is_deleted = 0
+        WHERE a.id = #{id} AND a.is_deleted = 0
+    </select>
+
+</mapper>
