@@ -9,11 +9,12 @@ import com.example.classservice.service.ClassService;
 import com.example.classservice.vo.ClassVO;
 import com.example.classservice.vo.StudentVO;
 import com.example.utils.R;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
+
 
 /**
  * 班级管理控制器
