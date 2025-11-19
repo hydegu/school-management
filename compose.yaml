@@ -93,8 +93,8 @@ services:
   # 认证服务 (优先启动)
   auth-service:
     build:
-      context: ./auth-service
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: auth-service/Dockerfile
     container_name: auth-service
     ports:
       - "8086:8086"
@@ -112,18 +112,12 @@ services:
       redis:
         condition: service_healthy
     restart: on-failure
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8086/actuator/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 5
-      start_period: 90s
 
   # 班级管理服务
   class-service:
     build:
-      context: ./class-service
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: class-service/Dockerfile
     container_name: class-service
     ports:
       - "8081:8081"
@@ -141,20 +135,14 @@ services:
       redis:
         condition: service_healthy
       auth-service:
-        condition: service_healthy
+        condition: service_started
     restart: on-failure
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8081/actuator/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 5
-      start_period: 90s
 
   # 学生事务服务
   student-service:
     build:
-      context: ./student-service
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: student-service/Dockerfile
     container_name: student-service
     ports:
       - "8083:8083"
@@ -172,20 +160,14 @@ services:
       redis:
         condition: service_healthy
       auth-service:
-        condition: service_healthy
+        condition: service_started
     restart: on-failure
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8083/actuator/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 5
-      start_period: 90s
 
   # 教师信息服务
   teacher-service:
     build:
-      context: ./teacher-service
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: teacher-service/Dockerfile
     container_name: teacher-service
     ports:
       - "8084:8084"
@@ -203,20 +185,14 @@ services:
       redis:
         condition: service_healthy
       auth-service:
-        condition: service_healthy
+        condition: service_started
     restart: on-failure
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8084/actuator/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 5
-      start_period: 90s
 
   # 审批流程服务
   workflow-service:
     build:
-      context: ./workflow-service
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: workflow-service/Dockerfile
     container_name: workflow-service
     ports:
       - "8085:8085"
@@ -234,20 +210,14 @@ services:
       redis:
         condition: service_healthy
       auth-service:
-        condition: service_healthy
+        condition: service_started
     restart: on-failure
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8085/actuator/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 5
-      start_period: 90s
 
   # 业务服务 (依赖workflow-service)
   business-service:
     build:
-      context: ./business-service
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: business-service/Dockerfile
     container_name: business-service
     ports:
       - "8082:8082"
@@ -265,22 +235,16 @@ services:
       redis:
         condition: service_healthy
       auth-service:
-        condition: service_healthy
+        condition: service_started
       workflow-service:
-        condition: service_healthy
+        condition: service_started
     restart: on-failure
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8082/actuator/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 5
-      start_period: 90s
 
   # 网关服务 (最后启动)
   gateway-service:
     build:
-      context: ./gateway
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: gateway/Dockerfile
     container_name: gateway-service
     ports:
       - "8080:8080"
@@ -294,24 +258,24 @@ services:
       nacos:
         condition: service_healthy
       auth-service:
-        condition: service_healthy
+        condition: service_started
       class-service:
-        condition: service_healthy
+        condition: service_started
       student-service:
-        condition: service_healthy
+        condition: service_started
       teacher-service:
-        condition: service_healthy
+        condition: service_started
       workflow-service:
-        condition: service_healthy
+        condition: service_started
       business-service:
-        condition: service_healthy
+        condition: service_started
     restart: on-failure
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 5
-      start_period: 90s
+      interval: 20s
+      timeout: 5s
+      retries: 10
+      start_period: 60s
 
 volumes:
   mysql-data:
