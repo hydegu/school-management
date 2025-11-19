@@ -3,15 +3,30 @@ FROM maven:3.9-eclipse-temurin-17 AS builder
 
 WORKDIR /app
 
-# 复制父POM和common模块
+# 复制完整的项目结构
 COPY pom.xml ./
 COPY common ./common
+COPY auth-service/pom.xml ./auth-service/pom.xml
+COPY business-service/pom.xml ./business-service/pom.xml
+COPY class-service/pom.xml ./class-service/pom.xml
+COPY student-service/pom.xml ./student-service/pom.xml
+COPY teacher-service/pom.xml ./teacher-service/pom.xml
+COPY workflow-service/pom.xml ./workflow-service/pom.xml
+COPY gateway/pom.xml ./gateway/pom.xml
 
-# 复制当前服务
-COPY teacher-service/pom.xml ./teacher-service/
+# 下载依赖
+RUN mvn dependency:go-offline -DskipTests
+
+# 复制源代码
+COPY auth-service/src ./auth-service/src
+COPY business-service/src ./business-service/src
+COPY class-service/src ./class-service/src
+COPY student-service/src ./student-service/src
 COPY teacher-service/src ./teacher-service/src
+COPY workflow-service/src ./workflow-service/src
+COPY gateway/src ./gateway/src
 
-# 构建项目（跳过测试以加快构建速度）
+# 只构建teacher-service
 RUN mvn clean package -pl teacher-service -am -DskipTests
 
 # 运行阶段
