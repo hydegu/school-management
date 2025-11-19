@@ -43,12 +43,12 @@ public class BusinessFeignClientImpl implements BusinessFeignClient {
         return R.error(500, cause.getMessage());
     }
 
-    // ==================== 调课相关接口降级 ====================
-
     @Override
     public R<Long> applyCourseChange(CourseChangeApplyRequest request) {
         return R.error(500, cause.getMessage());
     }
+
+    // ==================== 调课相关接口降级 ====================
 
     @Override
     public R<CourseChangeVO> getCourseChangeDetail(Long id) {
