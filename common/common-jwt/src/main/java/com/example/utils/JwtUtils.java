@@ -1,4 +1,4 @@
-package com.example.gateway.utils;
+package com.example.utils;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
@@ -13,8 +13,13 @@ import java.util.Map;
 import java.util.Optional;
 
 /**
- * JWT 工具类 - Gateway专用版本（WebFlux兼容）
+ * JWT 工具类 - 纯净版本（无Spring依赖）
  * 支持双令牌机制（AccessToken + RefreshToken）
+ *
+ * 特点：
+ * - 零Spring依赖，可在Servlet和WebFlux环境中使用
+ * - 线程安全，所有方法都是静态的
+ * - 支持双令牌机制
  */
 @Slf4j
 public class JwtUtils {

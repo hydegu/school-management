@@ -3,7 +3,7 @@ package com.example.gateway.filter;
 import com.example.gateway.config.JwtProperties;
 import com.example.gateway.config.WhiteListProperties;
 import com.example.gateway.constants.GatewayConstants;
-import com.example.gateway.utils.JwtUtils;
+import com.example.utils.JwtUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
