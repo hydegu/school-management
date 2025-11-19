@@ -161,9 +161,6 @@ INFO: 请求结束 => Method: POST, Path: /api/auth/login, Status: 200, Duration
 - 白名单
 - JWT配置（可被Nacos覆盖）
 
-### Nacos配置
-
-详见 [NACOS_CONFIG_GUIDE.md](NACOS_CONFIG_GUIDE.md)
 
 必须配置：
 - `gateway-service.yaml` - Gateway专用配置
@@ -363,6 +360,5 @@ logging:
 
 ## 相关文档
 
-- [Nacos配置指南](NACOS_CONFIG_GUIDE.md)
 - [Spring Cloud Gateway文档](https://docs.spring.io/spring-cloud-gateway/docs/current/reference/html/)
 - [Project Reactor文档](https://projectreactor.io/docs/core/release/reference/)
