@@ -81,18 +81,7 @@ spring:
             allowCredentials: true
             maxAge: 3600
 
-# JWT Configuration
-jwt:
-  secret-key: ${JWT_SECRET_KEY:your-256-bit-secret-key-here-must-be-at-least-32-characters-long}
-  access-token:
-    ttl: 900000  # 15 minutes
-    token-name: Authorization
-  refresh-token:
-    ttl: 604800000  # 7 days
-    token-name: Refresh-Token
-    redis-key-prefix: refresh_token:
-
-# Whitelist Configuration
+# Whitelist Configuration (Gateway特有)
 whitelist:
   urls:
     - /api/auth/login
@@ -101,16 +90,14 @@ whitelist:
     - /actuator/**
     - /favicon.ico
 
-# Logging Configuration
+# Logging Configuration (Gateway特定的日志级别)
 logging:
   level:
     com.example.gateway: DEBUG
     org.springframework.cloud.gateway: INFO
     org.springframework.web.reactive: INFO
-  pattern:
-    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n"
 
-# Actuator Configuration
+# Actuator Configuration (Gateway监控端点)
 management:
   endpoints:
     web:
