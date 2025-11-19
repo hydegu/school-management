@@ -1,9 +1,13 @@
+server:
+  port: 8080
+
 spring:
   application:
     name: gateway-service
   config:
     import:
       - nacos:gateway-service.yaml?refresh=true
+      - nacos:school-common.yaml?refresh=true
   cloud:
     nacos:
       serverAddr: 127.0.0.1:8848
@@ -14,3 +18,104 @@ spring:
         port: 8720
         dashboard: localhost:8858
       eager: true
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+      routes:
+        # Auth Service Routes
+        - id: auth-service
+          uri: lb://auth-service
+          predicates:
+            - Path=/api/auth/**
+          filters:
+            - StripPrefix=0
+
+        # Business Service Routes
+        - id: business-service
+          uri: lb://business-service
+          predicates:
+            - Path=/api/business/**
+          filters:
+            - StripPrefix=0
+
+        # Class Service Routes
+        - id: class-service
+          uri: lb://class-service
+          predicates:
+            - Path=/api/class/**
+          filters:
+            - StripPrefix=0
+
+        # Student Service Routes
+        - id: student-service
+          uri: lb://student-service
+          predicates:
+            - Path=/api/student/**
+          filters:
+            - StripPrefix=0
+
+        # Teacher Service Routes
+        - id: teacher-service
+          uri: lb://teacher-service
+          predicates:
+            - Path=/api/teacher/**
+          filters:
+            - StripPrefix=0
+
+        # Workflow Service Routes
+        - id: workflow-service
+          uri: lb://workflow-service
+          predicates:
+            - Path=/api/workflow/**
+          filters:
+            - StripPrefix=0
+
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOriginPatterns: "*"
+            allowedMethods: "*"
+            allowedHeaders: "*"
+            allowCredentials: true
+            maxAge: 3600
+
+# JWT Configuration
+jwt:
+  secret-key: ${JWT_SECRET_KEY:your-256-bit-secret-key-here-must-be-at-least-32-characters-long}
+  access-token:
+    ttl: 900000  # 15 minutes
+    token-name: Authorization
+  refresh-token:
+    ttl: 604800000  # 7 days
+    token-name: Refresh-Token
+    redis-key-prefix: refresh_token:
+
+# Whitelist Configuration
+whitelist:
+  urls:
+    - /api/auth/login
+    - /api/auth/register
+    - /api/auth/refresh
+    - /actuator/**
+    - /favicon.ico
+
+# Logging Configuration
+logging:
+  level:
+    com.example.gateway: DEBUG
+    org.springframework.cloud.gateway: INFO
+    org.springframework.web.reactive: INFO
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n"
+
+# Actuator Configuration
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,gateway
+  endpoint:
+    health:
+      show-details: always

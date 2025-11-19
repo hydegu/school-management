@@ -14,10 +14,10 @@
     <description>Common parent module containing shared utilities and configurations</description>
 
     <modules>
+        <module>common-jwt</module>
         <module>common-core</module>
         <module>common-api</module>
         <module>common-security</module>
-
     </modules>
 
     <properties>
