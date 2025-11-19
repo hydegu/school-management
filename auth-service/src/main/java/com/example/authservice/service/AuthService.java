@@ -1,7 +1,7 @@
 package com.example.authservice.service;
 
-import com.example.authservice.dto.AuthResponse;
-import com.example.authservice.dto.LoginRequest;
+import com.example.dto.AuthResponse;
+import com.example.dto.LoginRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 

@@ -1,9 +1,9 @@
 package com.example.authservice.controller;
 
-import com.example.authservice.dto.AuthResponse;
-import com.example.authservice.dto.LoginRequest;
-import com.example.authservice.dto.LogoutRequest;
-import com.example.authservice.dto.RefreshRequest;
+import com.example.dto.AuthResponse;
+import com.example.dto.LoginRequest;
+import com.example.dto.LogoutRequest;
+import com.example.dto.RefreshRequest;
 import com.example.authservice.service.AuthService;
 import com.example.utils.R;
 import jakarta.servlet.http.HttpServletRequest;

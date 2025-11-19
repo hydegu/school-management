@@ -3,7 +3,9 @@ package com.example.fallback;
 import com.example.client.AuthFeignClient;
 import com.example.fallback.impl.AuthFeignClientImpl;
 import org.springframework.cloud.openfeign.FallbackFactory;
+import org.springframework.stereotype.Component;
 
+@Component
 public class AuthFeignClientFallbackFactory implements FallbackFactory<AuthFeignClient> {
     @Override
     public AuthFeignClient create(Throwable cause) {

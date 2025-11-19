@@ -3,7 +3,9 @@ package com.example.fallback;
 import com.example.client.BusinessFeignClient;
 import com.example.fallback.impl.BusinessFeignClientImpl;
 import org.springframework.cloud.openfeign.FallbackFactory;
+import org.springframework.stereotype.Component;
 
+@Component
 public class BusinessFeignClientFallbackFactory implements FallbackFactory<BusinessFeignClient> {
     @Override
     public BusinessFeignClient create(Throwable cause) {

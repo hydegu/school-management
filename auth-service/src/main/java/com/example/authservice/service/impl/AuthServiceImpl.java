@@ -1,7 +1,7 @@
 package com.example.authservice.service.impl;
 
-import com.example.authservice.dto.AuthResponse;
-import com.example.authservice.dto.LoginRequest;
+import com.example.dto.AuthResponse;
+import com.example.dto.LoginRequest;
 import com.example.authservice.entity.AppUser;
 import com.example.authservice.entity.Role;
 import com.example.authservice.service.AuthService;
