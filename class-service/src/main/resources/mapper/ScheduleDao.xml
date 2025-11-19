@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.classservice.dao.ScheduleDao">
+
+    <!-- 通用结果映射 -->
+    <resultMap id="ScheduleVOMap" type="com.example.classservice.vo.ScheduleVO">
+        <id column="id" property="id"/>
+        <result column="course_id" property="courseId"/>
+        <result column="course_name" property="courseName"/>
+        <result column="class_id" property="classId"/>
+        <result column="class_name" property="className"/>
+        <result column="teacher_id" property="teacherId"/>
+        <result column="teacher_name" property="teacherName"/>
+        <result column="subject_id" property="subjectId"/>
+        <result column="subject_name" property="subjectName"/>
+        <result column="week_day" property="weekDay"/>
+        <result column="period" property="period"/>
+        <result column="classroom" property="classroom"/>
+        <result column="start_time" property="startTime"/>
+        <result column="end_time" property="endTime"/>
+        <result column="semester" property="semester"/>
+        <result column="status" property="status"/>
+    </resultMap>
+
+    <!-- 查询班级课表 -->
+    <select id="selectSchedulesByClassId" resultMap="ScheduleVOMap">
+        SELECT
+            sch.id,
+            sch.course_id,
+            co.course_name,
+            sch.class_id,
+            cl.class_name,
+            sch.teacher_id,
+            t.teacher_name,
+            sch.subject_id,
+            su.subject_name,
+            sch.week_day,
+            sch.period,
+            sch.classroom,
+            sch.start_time,
+            sch.end_time,
+            sch.semester,
+            sch.status
+        FROM edu_schedule sch
+        LEFT JOIN edu_course co ON sch.course_id = co.id AND co.is_deleted = 0
+        LEFT JOIN edu_class cl ON sch.class_id = cl.id AND cl.is_deleted = 0
+        LEFT JOIN edu_teacher t ON sch.teacher_id = t.id AND t.is_deleted = 0
+        LEFT JOIN edu_subject su ON sch.subject_id = su.id AND su.is_deleted = 0
+        WHERE sch.is_deleted = 0
+            AND sch.class_id = #{classId}
+            AND sch.semester = #{semester}
+        ORDER BY sch.week_day ASC, sch.period ASC
+    </select>
+
+    <!-- 查询教师课表 -->
+    <select id="selectSchedulesByTeacherId" resultMap="ScheduleVOMap">
+        SELECT
+            sch.id,
+            sch.course_id,
+            co.course_name,
+            sch.class_id,
+            cl.class_name,
+            sch.teacher_id,
+            t.teacher_name,
+            sch.subject_id,
+            su.subject_name,
+            sch.week_day,
+            sch.period,
+            sch.classroom,
+            sch.start_time,
+            sch.end_time,
+            sch.semester,
+            sch.status
+        FROM edu_schedule sch
+        LEFT JOIN edu_course co ON sch.course_id = co.id AND co.is_deleted = 0
+        LEFT JOIN edu_class cl ON sch.class_id = cl.id AND cl.is_deleted = 0
+        LEFT JOIN edu_teacher t ON sch.teacher_id = t.id AND t.is_deleted = 0
+        LEFT JOIN edu_subject su ON sch.subject_id = su.id AND su.is_deleted = 0
+        WHERE sch.is_deleted = 0
+            AND sch.teacher_id = #{teacherId}
+            AND sch.semester = #{semester}
+        ORDER BY sch.week_day ASC, sch.period ASC
+    </select>
+
+    <!-- 检查教师时间冲突 -->
+    <select id="checkTeacherConflict" resultType="int">
+        SELECT COUNT(*)
+        FROM edu_schedule
+        WHERE is_deleted = 0
+            AND teacher_id = #{teacherId}
+            AND week_day = #{weekDay}
+            AND period = #{period}
+            AND semester = #{semester}
+            <if test="excludeId != null">
+                AND id != #{excludeId}
+            </if>
+    </select>
+
+    <!-- 检查教室冲突 -->
+    <select id="checkClassroomConflict" resultType="int">
+        SELECT COUNT(*)
+        FROM edu_schedule
+        WHERE is_deleted = 0
+            AND classroom = #{classroom}
+            AND week_day = #{weekDay}
+            AND period = #{period}
+            AND semester = #{semester}
+            <if test="excludeId != null">
+                AND id != #{excludeId}
+            </if>
+    </select>
+
+</mapper>
