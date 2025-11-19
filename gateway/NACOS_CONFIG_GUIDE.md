@@ -11,51 +11,12 @@
 **配置格式**: `YAML`
 
 ```yaml
-# Gateway服务专用配置
-server:
-  port: 8080
-
-spring:
-  redis:
-    host: localhost
-    port: 6379
-    password:
-    database: 0
-    lettuce:
-      pool:
-        max-active: 8
-        max-idle: 8
-        min-idle: 0
-        max-wait: -1ms
-
-# JWT配置（重要：secretKey必须与auth-service保持一致）
-jwt:
-  secret-key: your-super-secret-key-must-be-at-least-256-bits-long-for-hs256-algorithm
-  access-token:
-    ttl: 900000  # 15分钟
-    token-name: Authorization
-  refresh-token:
-    ttl: 604800000  # 7天
-    token-name: Refresh-Token
-    redis-key-prefix: refresh_token:
-
-# 白名单配置
-whitelist:
-  urls:
-    - /api/auth/login
-    - /api/auth/register
-    - /api/auth/refresh
-    - /actuator/**
-    - /favicon.ico
+# Gateway服务专用配置（其他配置从 school-common.yaml 继承）
 
 # Sentinel限流配置（可选）
 spring:
   cloud:
     sentinel:
-      transport:
-        port: 8720
-        dashboard: localhost:8858
-      eager: true
       datasource:
         flow:
           nacos:
@@ -64,52 +25,86 @@ spring:
             groupId: SENTINEL_GROUP
             rule-type: flow
 
-# 日志配置
+# 日志配置（可选：如需文件日志）
 logging:
-  level:
-    com.example.gateway: INFO
-    org.springframework.cloud.gateway: INFO
   file:
     name: logs/gateway.log
   pattern:
     file: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n"
 ```
 
-### 2. school-common.yaml（如果尚未创建）
+**说明**：
+- ✅ Redis、JWT、数据库等配置已从 `school-common.yaml` 继承，无需重复配置
+- ✅ 白名单配置在 `application.yml` 中（Gateway特有）
+- ✅ 路由配置在 `application.yml` 中（Gateway核心功能）
+
+### 2. school-common.yaml（已存在）
 
 **配置ID**: `school-common.yaml`
 **Group**: `DEFAULT_GROUP`
 **配置格式**: `YAML`
 
 ```yaml
-# 所有服务的公共配置
+# 所有服务的公共配置（您已有的配置）
 
-# 数据库配置（Gateway不需要，但为了配置统一性）
-# spring:
-#   datasource:
-#     url: jdbc:mysql://localhost:3306/school_management?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai
-#     username: root
-#     password: root
-#     driver-class-name: com.mysql.cj.jdbc.Driver
-
-# Redis配置
 spring:
-  redis:
-    host: localhost
-    port: 6379
-    password:
-    database: 0
-    lettuce:
-      pool:
-        max-active: 8
-        max-idle: 8
-        min-idle: 0
-        max-wait: -1ms
+  # 数据库配置
+  datasource:
+    url: jdbc:mysql://localhost:3306/school_management?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.cj.jdbc.Driver
 
-# JWT密钥（所有服务必须使用相同密钥）
+  # 缓存配置
+  cache:
+    type: redis
+
+  # Redis配置
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      password: 123456
+      database: 0
+      timeout: 3000ms
+      lettuce:
+        pool:
+          max-active: 8
+          max-idle: 8
+          min-idle: 0
+          max-wait: -1ms
+
+# MyBatis-Plus配置
+mybatis-plus:
+  configuration:
+    default-enum-type-handler: com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler
+    map-underscore-to-camel-case: true
+  mapper-locations: classpath*:/mapper/**/*.xml
+  type-aliases-package: com.example.forum.*.entity
+
+# JWT配置（所有服务必须使用相同密钥）
 jwt:
-  secret-key: your-super-secret-key-must-be-at-least-256-bits-long-for-hs256-algorithm
+  secret-key: +kJ8A7Cw9b9hhPNULgUTYsXWLJI0TIsuLtGX99A+I3M=
+  access-token:
+    ttl: 900000  # 15分钟
+    token-name: "Authorization"
+  refresh-token:
+    ttl: 604800000  # 7天
+    token-name: "Refresh-Token"
+    redis-key-prefix: "refresh_token:"
+    use-cookie: true
+
+# 日志配置
+logging:
+  level:
+    com.example.filter.JwtAuthenticationFilter: DEBUG
+    com.example.service.TokenService: INFO
 ```
+
+**说明**：
+- ✅ Gateway会自动继承这些配置
+- ⚠️ Gateway不使用数据库和MyBatis，但继承这些配置不影响运行
+- ✅ JWT密钥已配置：`+kJ8A7Cw9b9hhPNULgUTYsXWLJI0TIsuLtGX99A+I3M=`
 
 ## 重要说明
 
