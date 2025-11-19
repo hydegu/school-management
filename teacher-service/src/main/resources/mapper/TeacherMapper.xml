@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.teacherservice.dao.TeacherDao">
+
+    <!-- 教师VO结果映射 -->
+    <resultMap id="TeacherVOMap" type="com.example.teacherservice.vo.TeacherVO">
+        <id column="id" property="id"/>
+        <result column="user_id" property="userId"/>
+        <result column="teacher_no" property="teacherNo"/>
+        <result column="teacher_name" property="teacherName"/>
+        <result column="gender" property="gender"/>
+        <result column="birth_date" property="birthDate"/>
+        <result column="id_card" property="idCard"/>
+        <result column="phone" property="phone"/>
+        <result column="email" property="email"/>
+        <result column="title" property="title"/>
+        <result column="hire_date" property="hireDate"/>
+        <result column="created_at" property="createdAt"/>
+        <result column="updated_at" property="updatedAt"/>
+    </resultMap>
+
+    <!-- 基础查询列 -->
+    <sql id="BaseColumns">
+        t.id,
+        t.user_id,
+        t.teacher_no,
+        t.teacher_name,
+        t.gender,
+        t.birth_date,
+        t.id_card,
+        t.phone,
+        t.email,
+        t.title,
+        t.hire_date,
+        t.created_at,
+        t.updated_at
+    </sql>
+
+    <!-- 基础查询条件 -->
+    <sql id="BaseWhere">
+        <where>
+            t.is_deleted = 0
+            <if test="req.keyword != null and req.keyword != ''">
+                AND (t.teacher_name LIKE CONCAT('%', #{req.keyword}, '%')
+                OR t.teacher_no LIKE CONCAT('%', #{req.keyword}, '%'))
+            </if>
+            <if test="req.gender != null">
+                AND t.gender = #{req.gender}
+            </if>
+            <if test="req.title != null and req.title != ''">
+                AND t.title LIKE CONCAT('%', #{req.title}, '%')
+            </if>
+        </where>
+    </sql>
+
+    <!-- 分页查询教师列表 -->
+    <select id="selectTeacherPage" resultMap="TeacherVOMap">
+        SELECT
+        <include refid="BaseColumns"/>
+        FROM edu_teacher t
+        <include refid="BaseWhere"/>
+        ORDER BY t.created_at DESC
+    </select>
+
+    <!-- 根据ID查询教师详情 -->
+    <select id="selectTeacherDetailById" resultMap="TeacherVOMap">
+        SELECT
+        <include refid="BaseColumns"/>
+        FROM edu_teacher t
+        WHERE t.id = #{id} AND t.is_deleted = 0
+    </select>
+
+    <!-- 根据教师编号查询教师 -->
+    <select id="selectTeacherByNo" resultMap="TeacherVOMap">
+        SELECT
+        <include refid="BaseColumns"/>
+        FROM edu_teacher t
+        WHERE t.teacher_no = #{teacherNo} AND t.is_deleted = 0
+    </select>
+
+</mapper>

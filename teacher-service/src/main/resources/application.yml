@@ -15,3 +15,14 @@ spring:
         port: 8724
         dashboard: localhost:8858
       eager: true
+    openfeign:
+      sentinel:
+        enabled: true
+
+# Feign
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: 3000
+        readTimeout: 5000
