@@ -7,26 +7,17 @@ WORKDIR /app
 COPY pom.xml ./
 COPY common ./common
 COPY auth-service/pom.xml ./auth-service/pom.xml
-COPY business-service/pom.xml ./business-service/pom.xml
-COPY class-service/pom.xml ./class-service/pom.xml
-COPY student-service/pom.xml ./student-service/pom.xml
 COPY teacher-service/pom.xml ./teacher-service/pom.xml
+COPY student-service/pom.xml ./student-service/pom.xml
+COPY class-service/pom.xml ./class-service/pom.xml
 COPY workflow-service/pom.xml ./workflow-service/pom.xml
+COPY business-service/pom.xml ./business-service/pom.xml
 COPY gateway/pom.xml ./gateway/pom.xml
-
-# 下载依赖
-RUN mvn dependency:go-offline -DskipTests
 
 # 复制源代码
 COPY auth-service/src ./auth-service/src
-COPY business-service/src ./business-service/src
-COPY class-service/src ./class-service/src
-COPY student-service/src ./student-service/src
-COPY teacher-service/src ./teacher-service/src
-COPY workflow-service/src ./workflow-service/src
-COPY gateway/src ./gateway/src
 
-# 只构建auth-service
+# 构建auth-service（直接构建，不预下载依赖）
 RUN mvn clean package -pl auth-service -am -DskipTests
 
 # 运行阶段
