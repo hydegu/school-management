@@ -1,7 +1,6 @@
 package com.example.config;
 
 import lombok.Data;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
@@ -13,7 +12,6 @@ public class JwtProperties {
     /**
      * JWT密钥
      */
-    @Value("${jwt.secret-key}")
     private String secretKey;
 
     /**
@@ -31,14 +29,12 @@ public class JwtProperties {
         /**
          * AccessToken有效期（毫秒），默认15分钟
          */
-        @Value("${jwt.access-token.ttl}")
-        private long ttl;
+        private long ttl = 900000L;
 
         /**
          * AccessToken名称
          */
-        @Value("${jwt.access-token.token-name}")
-        private String tokenName;
+        private String tokenName = "accessToken";
     }
 
     @Data
@@ -46,19 +42,16 @@ public class JwtProperties {
         /**
          * RefreshToken有效期（毫秒），默认7天
          */
-        @Value("${jwt.refresh-token.ttl}")
-        private long ttl;
+        private long ttl = 604800000L;
 
         /**
          * RefreshToken名称
          */
-        @Value("${jwt.refresh-token.token-name}")
-        private String tokenName;
+        private String tokenName = "refreshToken";
 
         /**
          * RefreshToken在Redis中的key前缀
          */
-        @Value("${jwt.refresh-token.redis-key-prefix}")
-        private String redisKeyPrefix;
+        private String redisKeyPrefix = "refresh_token:";
     }
 }

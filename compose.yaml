@@ -19,6 +19,7 @@ services:
       - --default-authentication-plugin=mysql_native_password
     volumes:
       - mysql-data:/var/lib/mysql
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
 #    networks:
 #      - school-network
     healthcheck:
@@ -40,7 +41,7 @@ services:
 #    networks:
 #      - school-network
     healthcheck:
-      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      test: ["CMD", "redis-cli", "-a", "123456", "ping"]
       interval: 10s
       timeout: 5s
       retries: 3
@@ -97,7 +98,6 @@ services:
     ports:
       - "8086:8086"
     environment:
-      - SPRING_PROFILES_ACTIVE=prod
       - SPRING_CLOUD_NACOS_SERVER_ADDR=nacos:8848
       - SPRING_CLOUD_SENTINEL_TRANSPORT_DASHBOARD=sentinel-dashboard:8858
 #    networks:
