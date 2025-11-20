@@ -51,6 +51,16 @@
 
     <build>
         <plugins>
+            <!-- 关键修改:禁用 Spring Boot repackage -->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+
+            <!-- 修正 compiler plugin 配置 -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
@@ -62,6 +72,7 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
+                    <!-- 移除 skip=true,这会导致编译被跳过! -->
                     <annotationProcessorPaths>
                         <path>
                             <groupId>org.projectlombok</groupId>

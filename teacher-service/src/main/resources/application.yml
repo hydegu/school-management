@@ -13,7 +13,7 @@ spring:
     sentinel:
       transport:
         port: 8724
-        dashboard: localhost:8858
+        dashboard: 127.0.0.1:8858
       eager: true
     openfeign:
       sentinel:

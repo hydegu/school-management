@@ -8,11 +8,11 @@ WORKDIR /app
 COPY pom.xml ./
 COPY common ./common
 COPY auth-service/pom.xml ./auth-service/pom.xml
-COPY business-service/pom.xml ./business-service/pom.xml
-COPY class-service/pom.xml ./class-service/pom.xml
-COPY student-service/pom.xml ./student-service/pom.xml
 COPY teacher-service/pom.xml ./teacher-service/pom.xml
+COPY student-service/pom.xml ./student-service/pom.xml
+COPY class-service/pom.xml ./class-service/pom.xml
 COPY workflow-service/pom.xml ./workflow-service/pom.xml
+COPY business-service/pom.xml ./business-service/pom.xml
 COPY gateway/pom.xml ./gateway/pom.xml
 
 # 复制源代码
