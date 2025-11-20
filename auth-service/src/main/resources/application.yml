@@ -2,13 +2,12 @@ spring:
   application:
     name: auth-service
   config:
-    server-addr: localhost:8848
     import:
       - nacos:auth-service.yaml?refresh=true
       - nacos:school-common.yaml?refresh=true
   cloud:
     nacos:
-      serverAddr: localhost:8848
+      serverAddr: 127.0.0.1:8848
       discovery:
         # 服务注册到 Nacos
         enabled: true
