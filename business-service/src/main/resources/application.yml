@@ -7,14 +7,14 @@ spring:
       - nacos:school-common.yaml?refresh=true
   cloud:
     nacos:
-      serverAddr: 127.0.0.1:8848
+      serverAddr: nacos:8848
       discovery:
         # Nacos
         enabled: true
     sentinel:
       transport:
         port: 8719
-        dashboard: localhost:8858
+        dashboard: sentinel-dashboard:8858
       eager: true
     openfeign:
       sentinel:
