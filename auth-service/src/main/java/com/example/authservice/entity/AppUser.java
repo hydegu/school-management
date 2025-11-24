@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 @Accessors(chain = true)
 public class AppUser extends BaseEntity {
     @TableId(type = IdType.AUTO)
-    private Integer id;
+    private Long id;
     private String username;
     private String password;
     private String realName;
@@ -28,6 +28,5 @@ public class AppUser extends BaseEntity {
     private Byte status;
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDateTime lastLoginTime;
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-    private LocalDateTime lastLoginIp;
+    private String lastLoginIp;
 }

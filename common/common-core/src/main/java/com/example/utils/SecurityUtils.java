@@ -1,5 +1,6 @@
 package com.example.utils;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -35,6 +36,8 @@ public final class SecurityUtils {
         }
         return Optional.of(authentication);
     }
+
+
 
     /**
      * 获取当前用户名
@@ -189,4 +192,6 @@ public final class SecurityUtils {
     public static PasswordEncoder getPasswordEncoder() {
         return PASSWORD_ENCODER;
     }
+
+
 }

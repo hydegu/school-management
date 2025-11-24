@@ -9,6 +9,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -20,7 +21,7 @@ public class TokenServiceImpl implements TokenService {
     private final StringRedisTemplate redisTemplate;
 
     @Override
-    public Map<String, Object> generateTokens(Long userId, String username, String role) {
+    public Map<String, Object> generateTokens(Long userId, String username, List<String> role) {
         // 生成AccessToken
         String accessToken = JwtUtils.createAccessToken(
                 jwtProperties.getSecretKey(),
@@ -95,10 +96,10 @@ public class TokenServiceImpl implements TokenService {
             }
 
             // 从roleProvider获取用户最新的角色信息
-            String role = roleProvider != null ? roleProvider.getRole(userId) : null;
+            List<String> role = roleProvider != null ? roleProvider.getRole(userId) : null;
             if (role == null) {
                 log.warn("无法获取用户 {} 的角色信息，使用默认角色", userId);
-                role = "student";  // 默认角色
+                role = List.of("student");  // 默认角色
             }
 
             // 生成新的双令牌

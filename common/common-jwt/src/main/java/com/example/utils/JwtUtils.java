@@ -7,10 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * JWT 工具类 - 纯净版本（无Spring依赖）
@@ -45,7 +42,7 @@ public class JwtUtils {
      * @param role      用户角色
      * @return AccessToken
      */
-    public static String createAccessToken(String secretKey, long ttlMillis, Long userId, String username, String role) {
+    public static String createAccessToken(String secretKey, long ttlMillis, Long userId, String username, List<String> role) {
         Map<String, Object> claims = new HashMap<>();
         claims.put(CLAIM_TOKEN_TYPE, TOKEN_TYPE_ACCESS);
         claims.put(CLAIM_USER_ID, userId);
@@ -103,39 +100,8 @@ public class JwtUtils {
      * @param claims JWT Claims
      * @return 角色
      */
-    public static String getRoleFromClaims(Claims claims) {
-        return claims.get(CLAIM_ROLE, String.class);
-    }
-
-    /**
-     * 生成 JWT Token
-     * 使用 HS256 算法
-     *
-     * @param secretKey  JWT 密钥
-     * @param ttlMillis  有效期（毫秒）
-     * @param claims     自定义声明
-     * @return JWT Token
-     */
-    public static String createJwt(String secretKey, long ttlMillis, Map<String, Object> claims) {
-        if (secretKey == null || secretKey.isBlank()) {
-            throw new IllegalArgumentException("密钥不能为空");
-        }
-        if (ttlMillis <= 0) {
-            throw new IllegalArgumentException("有效期必须大于0");
-        }
-
-        long expMillis = System.currentTimeMillis() + ttlMillis;
-        Date exp = new Date(expMillis);
-
-        SecretKey key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
-
-        JwtBuilder builder = Jwts.builder()
-                .signWith(key)
-                .claims(claims)
-                .issuedAt(new Date())
-                .expiration(exp);
-
-        return builder.compact();
+    public static List<String> getRoleFromClaims(Claims claims) {
+        return claims.get(CLAIM_ROLE, List.class);
     }
 
     /**

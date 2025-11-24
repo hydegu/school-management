@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -84,7 +85,7 @@ public class UserServiceImpl extends ServiceImpl<UserDao, AppUser> implements Us
 
     @Override
     @Cacheable(cacheNames = "users:roles", key = "#userId", unless = "#result == null")
-    public Role selectRolesByUserId(Integer userId) {
+    public List<Role> selectRolesByUserId(Long userId) {
         return userRepo.selectRolesByUserId(userId);
     }
 

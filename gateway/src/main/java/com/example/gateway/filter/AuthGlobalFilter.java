@@ -24,6 +24,7 @@ import reactor.core.publisher.Mono;
 
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -73,20 +74,20 @@ public class AuthGlobalFilter implements GlobalFilter, Ordered {
             // 5. 提取用户信息
             Long userId = JwtUtils.getUserIdFromClaims(claims);
             String username = claims.getSubject();
-            String role = JwtUtils.getRoleFromClaims(claims);
+            List<String> roles = JwtUtils.getRoleFromClaims(claims);
 
             if (userId == null || username == null) {
                 log.warn("令牌缺少必要的用户信息: {}", path);
                 return writeUnauthorizedResponse(exchange.getResponse(), GatewayConstants.Messages.TOKEN_INFO_INCOMPLETE);
             }
 
-            log.debug("用户认证成功: userId={}, username={}, role={}", userId, username, role);
+            log.debug("用户认证成功: userId={}, username={}, role={}", userId, username, roles);
 
             // 6. 将用户信息添加到请求头，传递给下游服务
             ServerHttpRequest modifiedRequest = request.mutate()
                     .header(GatewayConstants.Headers.USER_ID, userId.toString())
                     .header(GatewayConstants.Headers.USERNAME, username)
-                    .header(GatewayConstants.Headers.USER_ROLE, role != null ? role : "")
+                    .header(GatewayConstants.Headers.USER_ROLE, roles != null ? String.join(",",roles): "")
                     .build();
 
             ServerWebExchange modifiedExchange = exchange.mutate()

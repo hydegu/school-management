@@ -32,8 +32,7 @@ public interface AuthService {
     /**
      * 用户登出
      *
-     * @param userId       用户ID
      * @param httpResponse HttpServletResponse（用于删除Cookie）
      */
-    void logout(Long userId, HttpServletResponse httpResponse);
+    void logout(HttpServletResponse httpResponse);
 }

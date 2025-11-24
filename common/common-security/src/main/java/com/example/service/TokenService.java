@@ -9,6 +9,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -25,7 +26,7 @@ public interface TokenService {
      * @param role     用户角色
      * @return 包含accessToken和refreshToken的Map
      */
-    public Map<String, Object> generateTokens(Long userId, String username, String role);
+    public Map<String, Object> generateTokens(Long userId, String username, List<String> role);
 
     /**
      * 刷新AccessToken（需要提供roleProvider获取最新角色）
@@ -47,7 +48,7 @@ public interface TokenService {
          * @param userId 用户ID
          * @return 角色名称
          */
-        String getRole(Long userId);
+        List<String> getRole(Long userId);
     }
 
     /**

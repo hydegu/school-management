@@ -1,5 +1,6 @@
 package com.example.authservice.service.impl;
 
+import com.example.context.UserContext;
 import com.example.dto.AuthResponse;
 import com.example.dto.LoginRequest;
 import com.example.authservice.entity.AppUser;
@@ -9,16 +10,20 @@ import com.example.authservice.service.UserService;
 import com.example.config.JwtProperties;
 import com.example.service.TokenService;
 import com.example.utils.CookieUtils;
+import com.example.utils.SecurityUtils;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * 认证服务实现类
@@ -59,14 +64,14 @@ public class AuthServiceImpl implements AuthService {
         }
 
         // 4. 获取用户角色
-        Role role = userService.selectRolesByUserId(user.getId());
-        String roleName = role != null ? role.getRoleName() : "USER";
+        List<Role> role = userService.selectRolesByUserId(user.getId());
+        List<String> roles = role != null ? role.stream().map(Role::getRoleCode).collect(Collectors.toList()) : List.of("student");
 
         // 5. 生成双令牌
         Map<String, Object> tokens = tokenService.generateTokens(
                 user.getId().longValue(),
                 user.getUsername(),
-                roleName
+                roles
         );
 
         // 6. 构建响应
@@ -85,8 +90,8 @@ public class AuthServiceImpl implements AuthService {
 
             // 2. 刷新令牌（使用roleProvider获取最新角色）
             Map<String, Object> newTokens = tokenService.refreshAccessToken(token, userId -> {
-                Role role = userService.selectRolesByUserId(userId.intValue());
-                return role != null ? role.getRoleCode() : "student";
+                List<Role> role = userService.selectRolesByUserId(userId);
+                return role != null ? role.stream().map(Role::getRoleCode).collect(Collectors.toList()) : List.of("student");
             });
 
             // 3. 构建响应
@@ -102,9 +107,8 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public void logout(Long userId, HttpServletResponse httpResponse) {
-        log.info("用户登出请求: userId={}", userId);
-
+    public void logout(HttpServletResponse httpResponse) {
+        Long userId = Long.valueOf(UserContext.getUserId());
         // 1. 撤销Redis中的RefreshToken
         tokenService.revokeRefreshToken(userId);
 

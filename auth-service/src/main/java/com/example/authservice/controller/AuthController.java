@@ -2,7 +2,6 @@ package com.example.authservice.controller;
 
 import com.example.dto.AuthResponse;
 import com.example.dto.LoginRequest;
-import com.example.dto.LogoutRequest;
 import com.example.dto.RefreshRequest;
 import com.example.authservice.service.AuthService;
 import com.example.utils.R;
@@ -72,14 +71,13 @@ public class AuthController {
     /**
      * 用户登出
      *
-     * @param request  登出请求
      * @param response HttpServletResponse
      * @return 登出结果
      */
     @PostMapping("/logout")
-    public R<String> logout(@RequestBody LogoutRequest request, HttpServletResponse response) {
+    public R<String> logout(HttpServletResponse response) {
         try {
-            authService.logout(request.getUserId(), response);
+            authService.logout(response);
             return R.ok("登出成功");
         } catch (Exception e) {
             log.error("登出异常: ", e);

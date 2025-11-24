@@ -2,7 +2,6 @@ package com.example.client;
 
 import com.example.dto.AuthResponse;
 import com.example.dto.LoginRequest;
-import com.example.dto.LogoutRequest;
 import com.example.dto.RefreshRequest;
 import com.example.fallback.AuthFeignClientFallbackFactory;
 import com.example.utils.R;
@@ -28,5 +27,5 @@ public interface AuthFeignClient {
                                    HttpServletResponse response);
 
     @PostMapping("/logout")
-    public R<String> logout(@RequestBody LogoutRequest request, HttpServletResponse response);
+    public R<String> logout(HttpServletResponse response);
 }

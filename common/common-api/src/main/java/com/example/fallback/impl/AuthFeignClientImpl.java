@@ -2,7 +2,6 @@ package com.example.fallback.impl;
 
 import com.example.dto.AuthResponse;
 import com.example.dto.LoginRequest;
-import com.example.dto.LogoutRequest;
 import com.example.dto.RefreshRequest;
 import com.example.client.AuthFeignClient;
 import com.example.utils.R;
@@ -28,7 +27,7 @@ public class AuthFeignClientImpl implements AuthFeignClient {
     }
 
     @Override
-    public R<String> logout(@RequestBody LogoutRequest request, HttpServletResponse response) {
+    public R<String> logout(HttpServletResponse response) {
         return R.error(500, cause.getMessage());
     }
 }

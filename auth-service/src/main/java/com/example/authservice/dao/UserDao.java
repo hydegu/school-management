@@ -7,6 +7,8 @@ import com.example.authservice.entity.Role;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
+import java.util.List;
+
 @Mapper
 public interface UserDao extends BaseMapper<AppUser> {
     @Select("""
@@ -15,5 +17,5 @@ public interface UserDao extends BaseMapper<AppUser> {
         JOIN sys_user_role ur ON r.id = ur.role_id
         WHERE ur.user_id = #{userId}
     """)
-    Role selectRolesByUserId(Integer userId);
+    List<Role> selectRolesByUserId(Long userId);
 }

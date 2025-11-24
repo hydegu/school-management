@@ -6,11 +6,12 @@ import com.example.authservice.entity.AppUser;
 import com.example.authservice.entity.Role;
 
 
+import java.util.List;
 import java.util.Optional;
 
 public interface UserService extends IService<AppUser> {
 
-    Role selectRolesByUserId(Integer userId);
+    List<Role> selectRolesByUserId(Long userId);
 
     AppUser findByUserName(String name);
 
